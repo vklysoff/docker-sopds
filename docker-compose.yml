@@ -1,0 +1,25 @@
+x-logging: &logging
+  logging:
+    driver: loki
+    options:
+      loki-url: "http://127.0.0.1:3100/loki/api/v1/push"
+
+services:
+  sopds:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vklysoff/sopds
+    environment:
+      - SOPDS_TMBOT_ENABLE=True
+      - SOPDS_SU_EMAIL=vklysoff@gmail.com
+      - SOPDS_SU_NAME=${SOPDS_SU_NAME}
+      - SOPDS_SU_PASS=${SOPDS_SU_PASS}
+      # - EXT_DB=True
+    ports:
+      - 8082:8001
+    volumes:
+      - ./database:/var/lib/pgsql
+      - /mnt/autofs/tranq/media/books/bib/Flibusta.Net:/library:ro
+    restart: unless-stopped
+    <<: *logging
