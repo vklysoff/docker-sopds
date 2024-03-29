@@ -4,6 +4,9 @@ x-logging: &logging
     options:
       loki-url: "http://127.0.0.1:3100/loki/api/v1/push"
 
+volumes:
+  db:
+
 services:
   sopds:
     build:
@@ -15,7 +18,11 @@ services:
       - SOPDS_SU_EMAIL=vklysoff@gmail.com
       - SOPDS_SU_NAME=${SOPDS_SU_NAME}
       - SOPDS_SU_PASS=${SOPDS_SU_PASS}
-      # - EXT_DB=True
+      # - EXT_DB=False
+      # - DB_HOST=db
+      # - DB_NAME=${POSTGRES_DB}
+      # - DB_USER=${POSTGRES_USER}
+      # - DB_PASS=${POSTGRES_PASSWORD}
     ports:
       - 8082:8001
     volumes:
@@ -23,3 +30,28 @@ services:
       - /mnt/autofs/tranq/media/books/bib/Flibusta.Net:/library:ro
     restart: unless-stopped
     <<: *logging
+
+  db:
+    image: postgres:14.8
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - db:/var/lib/pgsql
+    restart: unless-stopped
+    <<: *logging
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8780:8080
