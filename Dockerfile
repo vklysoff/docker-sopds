@@ -3,20 +3,18 @@ LABEL maintainer="vklysoff@gmail.com"
 
 WORKDIR /sopds
 
-ADD https://github.com/vklysoff/sopds/archive/refs/heads/master.zip /sopds.zip
 ARG FB2C_I386=https://github.com/rupor-github/fb2converter/releases/latest/download/fb2c-linux-386.zip
 ARG FB2C_ARM64=https://github.com/rupor-github/fb2converter/releases/latest/download/fb2c-linux-arm64.zip
 
-RUN apk add --no-cache -U unzip \
-    && unzip /sopds.zip && rm /sopds.zip && mv sopds-*/* ./
+RUN apk add --no-cache -U tzdata build-base libxml2-dev libxslt-dev postgresql-dev libffi-dev libc-dev jpeg-dev zlib-dev curl git
+RUN git clone --single-branch --branch fb2xhtml https://github.com/vklysoff/sopds .
 
 COPY requirements.txt .
 COPY configs/settings.py ./sopds
 COPY scripts/fb2conv /fb2conv
 COPY scripts/superuser.exp .
 
-RUN apk add --no-cache -U tzdata build-base libxml2-dev libxslt-dev postgresql-dev libffi-dev libc-dev jpeg-dev zlib-dev curl \
-    && cp /usr/share/zoneinfo/Europe/Moscow /etc/localtime \
+RUN cp /usr/share/zoneinfo/Europe/Moscow /etc/localtime \
     && echo "Europe/Moscow" > /etc/timezone \
     && pip3 install --upgrade pip setuptools 'psycopg2-binary>=2.8,<2.9' \
     && pip3 install --upgrade -r requirements.txt \
