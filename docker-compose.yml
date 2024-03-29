@@ -13,22 +13,25 @@ services:
       context: .
       dockerfile: Dockerfile
     image: vklysoff/sopds
+    depends_on:
+      - db
+    restart: unless-stopped
     environment:
       - SOPDS_TMBOT_ENABLE=True
       - SOPDS_SU_EMAIL=vklysoff@gmail.com
       - SOPDS_SU_NAME=${SOPDS_SU_NAME}
       - SOPDS_SU_PASS=${SOPDS_SU_PASS}
       # - EXT_DB=False
-      # - DB_HOST=db
-      # - DB_NAME=${POSTGRES_DB}
-      # - DB_USER=${POSTGRES_USER}
-      # - DB_PASS=${POSTGRES_PASSWORD}
+      - DB_HOST=db
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASS=${POSTGRES_PASSWORD}
+      - MIGRATE=True
     ports:
       - 8082:8001
     volumes:
       - ./database:/var/lib/pgsql
       - /mnt/autofs/tranq/media/books/bib/Flibusta.Net:/library:ro
-    restart: unless-stopped
     <<: *logging
 
   db:
@@ -52,6 +55,8 @@ services:
 
   adminer:
     image: adminer
+    depends_on:
+      - db
     restart: always
     ports:
       - 8780:8080
