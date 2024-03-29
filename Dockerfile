@@ -3,7 +3,7 @@ LABEL maintainer="vklysoff@gmail.com"
 
 WORKDIR /sopds
 
-ADD https://github.com/mitshel/sopds/archive/refs/heads/master.zip /sopds.zip
+ADD https://github.com/vklysoff/sopds/archive/refs/heads/master.zip /sopds.zip
 ARG FB2C_I386=https://github.com/rupor-github/fb2converter/releases/latest/download/fb2c-linux-386.zip
 ARG FB2C_ARM64=https://github.com/rupor-github/fb2converter/releases/latest/download/fb2c-linux-arm64.zip
 
