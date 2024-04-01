@@ -18,10 +18,9 @@ services:
     restart: unless-stopped
     environment:
       - SOPDS_TMBOT_ENABLE=True
-      - SOPDS_SU_EMAIL=vklysoff@gmail.com
+      - SOPDS_SU_EMAIL=${SOPDS_SU_EMAIL}
       - SOPDS_SU_NAME=${SOPDS_SU_NAME}
       - SOPDS_SU_PASS=${SOPDS_SU_PASS}
-      # - EXT_DB=False
       - DB_HOST=db
       - DB_NAME=${POSTGRES_DB}
       - DB_USER=${POSTGRES_USER}
@@ -30,14 +29,13 @@ services:
     ports:
       - 8082:8001
     volumes:
-      - ./database:/var/lib/pgsql
-      - /mnt/autofs/tranq/media/books/bib/Flibusta.Net:/library:ro
+      - ${LIBRARY_PATH}:/library:ro
     <<: *logging
 
   db:
     image: postgres:14.8
     # set shared memory limit when using docker-compose
-    shm_size: 128mb
+    shm_size: 1gb
     # or set shared memory limit when deploy via swarm stack
     #volumes:
     #  - type: tmpfs
@@ -45,11 +43,13 @@ services:
     #    tmpfs:
     #      size: 134217728 # 128*2^20 bytes = 128Mb
     environment:
+      # - LANG=ru_RU.utf8
+      # - POSTGRES_INITDB_ARGS="--locale-provider=icu --icu-locale=ru-RU"
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      - db:/var/lib/pgsql
+      - db:/var/lib/postgresql/data
     restart: unless-stopped
     <<: *logging
 

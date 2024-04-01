@@ -21,6 +21,7 @@ if [ ! -f /sopds/setconf ]; then
     #configure fb2converter for epub and mobi - https://github.com/rupor-github/fb2converter
     python3 manage.py sopds_util setconf SOPDS_FB2TOEPUB "convert/fb2c/fb2epub"
     python3 manage.py sopds_util setconf SOPDS_FB2TOMOBI "convert/fb2c/fb2mobi"
+    # Configure converter for xhtml
     python3 manage.py sopds_util setconf SOPDS_FB2TOXHTML "convert/fb2xhtml/fb2xhtml"
 
     #autocreate the superuser
