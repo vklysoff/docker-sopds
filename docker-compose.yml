@@ -12,7 +12,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: vklysoff/sopds
+    image: lonecrazyvanger/sopds:0.47-devel
     depends_on:
       - db
     restart: unless-stopped
