@@ -53,10 +53,10 @@ services:
     restart: unless-stopped
     <<: *logging
 
-  adminer:
-    image: adminer
-    depends_on:
-      - db
-    restart: always
-    ports:
-      - 8780:8080
+  # adminer:
+  #   image: adminer
+  #   depends_on:
+  #     - db
+  #   restart: always
+  #   ports:
+  #     - 8780:8080
