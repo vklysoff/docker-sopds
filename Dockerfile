@@ -1,4 +1,4 @@
-FROM python:3.10.9-alpine3.16 AS build-stage
+FROM python:3.10-alpine AS build-stage
 LABEL maintainer="vklysoff@gmail.com"
 
 WORKDIR /sopds
@@ -35,7 +35,7 @@ RUN cp /usr/share/zoneinfo/Europe/Moscow /etc/localtime \
     && mkdir -p /sopds/tmp/ \
     && chmod ugo+w /sopds/tmp/
 
-FROM python:3.10.9-alpine3.16 AS production-stage
+FROM python:3.10-alpine AS production-stage
 LABEL maintainer="mail@zveronline.ru"
 
 ENV DB_USER="sopds" \
