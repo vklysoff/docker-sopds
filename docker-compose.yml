@@ -6,13 +6,19 @@ x-logging: &logging
 
 volumes:
   db:
+networks:
+  backend:
+    name: backend
+    driver: bridge
+    external: true
+
 
 services:
   sopds:
     build:
       context: .
       dockerfile: Dockerfile
-    image: lonecrazyvanger/sopds:0.47-devel
+    image: lonecrazyvanger/sopds:0.47-devel-python-3.10-alpine
     depends_on:
       - db
     restart: unless-stopped
@@ -26,10 +32,12 @@ services:
       - DB_USER=${POSTGRES_USER}
       - DB_PASS=${POSTGRES_PASSWORD}
       - MIGRATE=True
-    ports:
-      - 8082:8001
     volumes:
       - ${LIBRARY_PATH}:/library:ro
+    networks:
+      - backend
+    # ports:
+    #   - 8082:8001
     <<: *logging
 
   db:
